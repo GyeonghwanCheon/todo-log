@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
+// 유저 데이터
 @Getter
 @Entity
 @Table(name = "user")
@@ -26,7 +27,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    // Email
+    // 이메일
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -38,8 +39,13 @@ public class User extends BaseEntity {
     }
 
     // 생성자
-    public User(String mbti, String email, String password, String nickname) {
+    public User(String nickname, String password, String email, String mbti) {
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
         this.mbti = mbti;
+    }
+    public User( String nickname, String password, String email) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
