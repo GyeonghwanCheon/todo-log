@@ -3,7 +3,7 @@ package com.example.todolog.dto;
 // 유저 조회 응답 Dto
 public class UserResponseDto {
 
-    // 닉네임(이름)
+    // 닉네임 (이름)
     private String nickname;
 
     // 이메일

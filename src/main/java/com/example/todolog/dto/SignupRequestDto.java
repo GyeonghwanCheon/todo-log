@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class SignupRequestDto {
 
-    // 닉네임(이름)
+    // 닉네임 (이름)
     private final String nickname;
 
     // 이메일

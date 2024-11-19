@@ -9,7 +9,7 @@ public class SignupResponseDto {
     // Key 값
     private final Long id;
 
-    // 닉네임(이름)
+    // 닉네임 (이름)
     private final String nickname;
 
     // 이메일
