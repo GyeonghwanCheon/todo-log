@@ -53,8 +53,10 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateRequestDto dto){
 
+        // 새로운 mbti, 상태메세지 정보 넘기기
         userService.updateUser(id,dto.getNewMbti(), dto.getNewStatusMs());
 
+        // 유저 프로필 수정 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
