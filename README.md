@@ -22,11 +22,11 @@
 ## 👷‍♂️ API 명세서
 
 
-User 등록
+유저 등록
 
 method : POST
 
-URI : /users/signup
+URI : /users
 
 request : @RequestBody
 
