@@ -19,7 +19,7 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 닉네임 ( 이름 )
+    // 닉네임 (이름)
     @Column(nullable = false)
     private String nickname;
 
@@ -34,17 +34,14 @@ public class User extends BaseEntity {
     // MBTI
     private String mbti;
 
+    // 상태메세지
+    private String statusMs;
+
     // 기본 생성자
     public User(){
     }
 
-    // 생성자
-    public User(String nickname, String password, String email, String mbti) {
-        this.nickname = nickname;
-        this.password = password;
-        this.email = email;
-        this.mbti = mbti;
-    }
+    // 생성자 (회원가입)
     public User( String nickname, String password, String email) {
         this.email = email;
         this.password = password;
