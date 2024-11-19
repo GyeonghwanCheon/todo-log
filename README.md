@@ -61,7 +61,7 @@ status code :
 
 201(Created) : 정상등록
 
-400(Bad_Request) : 실패
+400(Bad_Request) : 요청 실패
 
 ---
 
@@ -97,7 +97,7 @@ status code :
 
 200(OK) : 정상조회
 
-404(NOT_FOUND) : 실패
+404(NOT_FOUND) : id 조회 실패
 
 ---
 
@@ -128,7 +128,7 @@ status code :
 
 200(OK) : 정상삭제
 
-401(UNAUTHORIZED) : 실패
+401(UNAUTHORIZED) : 권한 실패
 
 ---
 
@@ -162,7 +162,7 @@ status code :
 
 200(OK) : 정상 로그인
 
-401(UNAUTHORIZED) : 실패
+401(UNAUTHORIZED) : 권한 실패
 
 ---
 
@@ -225,7 +225,7 @@ status code :
 
 200(OK) : 정상
 
-400(BAD_REQUEST) : 실패
+400(BAD_REQUEST) : 요청 실패
 
 ----
 
@@ -400,6 +400,7 @@ status code :
 200(OK) : 정상
 
 400(BAD_REQUEST) : 요청 실패
+
 401(UNAUTHORIZED) : 권한 실패
 
 ---
@@ -437,4 +438,151 @@ status code :
 
 ---
 
+댓글 등록
+
+method : POST
+
+URI : /comments
+
+request :
+
+    {
+        "feedid" : 1,
+        "detail" : "댓글"
+    }
+
+response :
+
+    //성공 예시
+    
+    {
+        "id": 1,
+        "feedid": 1,
+        "username": "user1",
+        "detail": "댓글"
+    }
+
+    //실패 예시
+    {
+        "detail": "detail 은 20글자 이내여야 합니다."
+    }
+
+status code :
+
+200(OK) : 정상
+
+400(Bad_Request) : validation 실패
+
+---
+
+댓글 조회
+
+method : GET
+
+URI : /comments/{id}
+
+request : @RequestParam
+
+
+
+response :
+
+    //정상 예시
+    
+    {
+        "id": 1,
+        "feedid": 7,
+        "username": "user1",
+        "detail": "user1댓글"
+    }
+
+    //실패 예시
+    {
+        "timestamp": "2024-11-15T13:07:39.71697",
+        "status": 404,
+        "error": "NOT_FOUND",
+        "code": "COMMENT_NOT_FOUND",
+        "message": "해당 id 로 인한 댓글정보를 찾을 수 없습니다"
+    }
+
+status code :
+
+200(OK) : 정상
+
+404(NOT_FOUND) : id 조회 실패
+
+---
+
+댓글 수정
+
+method : PUT
+
+URI : /comments/{id}
+
+request :
+
+    {
+        "detail" : "dfdfdfdf"
+    }
+
+response :
+
+    //성공 예시
+    
+    1
+
+    //실패 예시
+    {
+        "timestamp": "2024-11-15T13:11:36.239848",
+        "status": 401,
+        "error": "UNAUTHORIZED",
+        "code": "UNAUTHORIZED_USER",
+        "message": "권한이 없습니다. 해당유저만 가능합니다."
+    }
+
+status code :
+
+200(OK) : 정상
+
+400(Bad_Request) : validation 실패
+
+401(UNAUTHORIZED) : 권한 실패
+
+404(NOT_FOUND) : id 조회 실패
+
+---
+
+댓글 삭제
+
+method : DELETE
+
+URI : /comments/{id}
+
+request :  @RequestParam
+
+
+response :
+
+    //성공 예시
+    
+    1
+
+    //실패 예시
+    {
+        "timestamp": "2024-11-15T13:11:36.239848",
+        "status": 401,
+        "error": "UNAUTHORIZED",
+        "code": "UNAUTHORIZED_USER",
+        "message": "권한이 없습니다. 해당유저만 가능합니다."
+    }
+
+status code :
+
+200(OK) : 정상
+
+401(UNAUTHORIZED) : 권한 실패
+
+404(NOT_FOUND) : id 조회 실패
+
+---
 
