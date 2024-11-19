@@ -62,4 +62,13 @@ public class UserService {
         finduser.updateUser(newMbti,newStatusMs);
     }
 
+    // 유저 삭제 메서드
+    public void deleteUser(Long id) {
+
+        // 요청받은 ID로 유저 데이터 조회, 없으면 예외 표시
+        User finduser = userRepository.findByIdOrElseThrow(id);
+
+        // 유저 삭제
+        userRepository.delete(finduser);
+    }
 }
