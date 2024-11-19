@@ -6,21 +6,22 @@
 
 ---
 >- ## ⚙ 구현 기능
->
+>1. 유저(user) CRUD 기능
+>2. 피드(feed) CRUD 기능
+>3. 댓글(comment)
+>4. 좋아요(like) 기능
+>5. 유저 로그인 기능
+>6. 친구 관리 기능
+>7. 비밀번호 암호화 기능
+>8. 피드 카테고리 기능
 > 
-> 
-> 
-> 
-> 
-> 
+
 ---
 
 ## 👷‍♂️ API 명세서
 
 
 User 등록
-
-
 
 method : POST
 
@@ -29,9 +30,11 @@ URI : /users/signup
 request : @RequestBody
 
     {
-        "username": "user1",
-        "password": "1234",
-        "email": "aa@aa.com"
+        "nickname": "user1",
+        "email": "aa@aa.com",
+        "status_ms": "상태메세지",
+        "mbti" : "infp",
+        "password": "1234"
     }
 
 response :
@@ -39,8 +42,10 @@ response :
     //정상등록 예시 
     {   
         "id": 1,
-        "username": "user1",
+        "nickname": "user1",
         "email": "aa@aa.com",
+        "status_ms": "상태메세지",
+        "mbti" : "infp",
         "password": "$2a$04$SAdzROzAX./dInQwejqhheaaA9G.uWzj2sv0S20TSWf87/nal/VAS"
     }
 
@@ -71,8 +76,10 @@ response :
 
     //정상조회 예시 
     {   
-        "username": "user1",
+        "nickname": "user1",
         "email": "aa@aa.com",
+        "status_ms": "상태메세지",
+        "mbti" : "infp",
         "password": "$2a$04$CJYd4Qr8n3/ol9KKLPTYyukHvCVEevOKpH.vrYI7R.IuiTAmZcMny"
     }
 
@@ -179,3 +186,44 @@ response :
 status code :
 
 200(OK) : 정상
+
+---
+
+
+피드(feed) 등록
+
+method : POST
+
+URI : /feeds
+
+request :
+
+    {
+        "user_id" : 1,
+        "title" : "제목",
+        "detail" : "내용"
+    }
+
+response :
+
+    //정상 등록 예시
+    
+    {
+        "id": 1,
+        "user_id" : 1,
+        "title": "제목",
+        "detail": "내용"
+    }
+
+    //실패 예시
+    {
+        "detail": "detail 은 20글자 이내여야 합니다.",
+        "title": "title 은 10글자 이내여야 합니다.",
+        "username": "username 은 1~5 글자여야 합니다."
+    }
+
+status code :
+
+200(OK) : 정상
+
+400(BAD_REQUEST) : 실패
