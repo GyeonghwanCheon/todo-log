@@ -47,4 +47,9 @@ public class User extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
     }
+    // 생성자 (유저 프로필 정보 수정)
+    public void updateUser(String mbti, String statusMs) {
+        this.mbti = mbti;
+        this.statusMs = statusMs;
+    }
 }

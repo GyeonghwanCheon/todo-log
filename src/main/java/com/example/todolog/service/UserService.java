@@ -7,6 +7,7 @@ import com.example.todolog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -49,4 +50,13 @@ public class UserService {
         // 객체 정보 반환
         return new UserResponseDto(findUser.getNickname(), findUser.getEmail(), findUser.getMbti(), findUser.getStatusMs());
     }
+
+    @Transactional
+    public void updateUser(Long id, String newMbti, String newStatusMs) {
+
+        User finduser = userRepository.findByIdOrElseThrow(id);
+
+        finduser.updateUser(newMbti,newStatusMs);
+    }
+
 }

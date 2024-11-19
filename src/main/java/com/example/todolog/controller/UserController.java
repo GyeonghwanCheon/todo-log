@@ -2,6 +2,7 @@ package com.example.todolog.controller;
 
 import com.example.todolog.dto.SignupRequestDto;
 import com.example.todolog.dto.SignupResponseDto;
+import com.example.todolog.dto.UpdateRequestDto;
 import com.example.todolog.dto.UserResponseDto;
 import com.example.todolog.entity.User;
 import com.example.todolog.service.UserService;
@@ -47,4 +48,14 @@ public class UserController {
         // 회원가입 성공 시 객체 정보 반환 + 201 코드 반환
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
+
+    // 유저 프로필 수정 메서드
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateRequestDto dto){
+
+        userService.updateUser(id,dto.getNewMbti(), dto.getNewStatusMs());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
