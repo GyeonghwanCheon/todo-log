@@ -7,11 +7,11 @@ public class FeedRequestDto {
 
     private final Long userId;
     private final String title;
-    private final String contents;
+    private final String detail;
 
-    public FeedRequestDto(Long userId, String title, String contents) {
+    public FeedRequestDto(Long userId,String title, String detail) {
         this.userId = userId;
         this.title = title;
-        this.contents = contents;
+        this.detail = detail;
     }
 }
