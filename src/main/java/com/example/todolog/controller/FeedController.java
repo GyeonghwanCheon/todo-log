@@ -10,12 +10,18 @@ import com.example.todolog.repository.FeedRepository;
 import com.example.todolog.repository.UserRepository;
 import com.example.todolog.service.FeedService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequestMapping("/feeds")
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +38,20 @@ public class FeedController {
 
         return new ResponseEntity<>(feedResponseDtoList, HttpStatus.OK);
     }
+
+    // 페이징 조회
+    @GetMapping("/paging")
+    public List<FeedResponseDto> findFeedByPageRequest(
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        log.info("sorted ={}", pageable.getSort());
+        List<FeedResponseDto> feedByPageRequest = feedService.findFeedByPageRequest(pageable);
+        return feedByPageRequest;
+    }
+
+
+
+
 
     // 피드 단건 조회
     @GetMapping("/{id}")

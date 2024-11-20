@@ -7,11 +7,14 @@ import com.example.todolog.entity.User;
 import com.example.todolog.repository.FeedRepository;
 import com.example.todolog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +32,8 @@ public class FeedService {
 
         return feedRepository.findAll().stream().map(FeedResponseDto::feedDto).toList();
     }
+
+
 
     // 피드 단건 조회
     public FeedResponseDto findById(Long id) {
@@ -98,4 +103,28 @@ public class FeedService {
         findFeed.updateFeed(title, contents);
     }
 
+    // 페이징 조회
+    public List<FeedResponseDto> findFeedByPageRequest(Pageable pageable) {
+
+        List<FeedResponseDto> feedResponseDtoList = new ArrayList<>();
+        Page<Feed> feedPage = feedRepository.findAll(pageable);
+        List<Feed> feedList = feedPage.getContent();
+        // Feed에서 User 객체를 제외하고 나머지 필드들만 불러와서 반환.
+
+        for (Feed feed : feedList) {
+            //FeedResponseDto에 Feed 필드를 넣는다.
+            FeedResponseDto feedResponseDto = new FeedResponseDto(
+                    feed.getId(),
+                    feed.getUser().getNickname(),
+                    feed.getTitle(),
+                    feed.getDetail(),
+                    feed.getCreatedAt(),
+                    feed.getUpdatedAt()
+            );
+            feedResponseDtoList.add(feedResponseDto);
+        }
+
+        return feedResponseDtoList;
+//        return feedRepository.findAll(pageable).getContent().stream().map(FeedResponseDto::feedDto).toList();
+    }
 }

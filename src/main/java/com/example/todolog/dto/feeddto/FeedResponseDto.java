@@ -2,6 +2,7 @@ package com.example.todolog.dto.feeddto;
 
 import com.example.todolog.entity.Feed;
 import lombok.Getter;
+import org.springframework.data.domain.Pageable;
 
 
 import java.time.LocalDateTime;
@@ -13,16 +14,16 @@ public class FeedResponseDto {
     private final String nickname;
     private final String title;
     private final String detail;
-    private final LocalDateTime createAt;
-    private final LocalDateTime updateAt;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
-    public FeedResponseDto(Long id, String nickname, String title, String detail, LocalDateTime createAt, LocalDateTime updateAt) {
+    public FeedResponseDto(Long id, String nickname, String title, String detail, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.nickname = nickname;
         this.title = title;
         this.detail = detail;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static FeedResponseDto feedDto (Feed feed) {
