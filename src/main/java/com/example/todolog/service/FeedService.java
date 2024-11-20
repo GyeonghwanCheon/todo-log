@@ -24,6 +24,7 @@ public class FeedService {
 
     // 피드 전체 조회
     public List<FeedResponseDto> findAll() {
+        List<Feed> feed = feedRepository.findAll();
 
         return feedRepository.findAll().stream().map(FeedResponseDto::feedDto).toList();
     }
