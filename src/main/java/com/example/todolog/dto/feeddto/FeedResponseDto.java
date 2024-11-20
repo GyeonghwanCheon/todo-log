@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 public class FeedResponseDto {
 
     private final Long id;
-    private final String writerName;
+    private final String nickname;
     private final String title;
     private final String detail;
     private final LocalDateTime createAt;
     private final LocalDateTime updateAt;
 
-    public FeedResponseDto(Long id, String writerName, String title, String detail, LocalDateTime createAt, LocalDateTime updateAt) {
+    public FeedResponseDto(Long id, String nickname, String title, String detail, LocalDateTime createAt, LocalDateTime updateAt) {
         this.id = id;
-        this.writerName = writerName;
+        this.nickname = nickname;
         this.title = title;
         this.detail = detail;
         this.createAt = createAt;

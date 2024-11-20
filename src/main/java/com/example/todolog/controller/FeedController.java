@@ -4,6 +4,9 @@ package com.example.todolog.controller;
 import com.example.todolog.dto.feeddto.FeedRequestDto;
 import com.example.todolog.dto.feeddto.FeedResponseDto;
 import com.example.todolog.dto.feeddto.FeedUpdateRequestDto;
+import com.example.todolog.entity.Feed;
+import com.example.todolog.entity.User;
+import com.example.todolog.repository.FeedRepository;
 import com.example.todolog.repository.UserRepository;
 import com.example.todolog.service.FeedService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ public class FeedController {
 
     private final FeedService feedService;
     private final UserRepository userRepository;
+    private final FeedRepository feedRepository;
 
     // 피드 전체 조회
     @GetMapping
@@ -39,8 +43,11 @@ public class FeedController {
 
     // 피드 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteFeed(@PathVariable Long id) {
-        feedService.deleteFeed(id);
+    public ResponseEntity<String> deleteFeed(
+            @PathVariable Long id,
+            @RequestBody FeedRequestDto dto) {
+
+        feedService.deleteFeed(id, dto.getNickname());
         return ResponseEntity.ok().body("정상적으로 삭제 되었습니다.");
     }
 
@@ -61,7 +68,12 @@ public class FeedController {
     @PatchMapping("/{id}")
     public ResponseEntity<FeedResponseDto> updateFeed(@RequestBody FeedUpdateRequestDto updateRequestDto,
                                                       @PathVariable Long id) {
-        feedService.updateFeed(id, updateRequestDto.getTitle(), updateRequestDto.getDetail());
+
+        Feed findFeed = feedRepository.findByOrElseThrow(id);
+
+        User user = findFeed.getUser();
+
+        feedService.updateFeed(id, updateRequestDto.getNickname() ,updateRequestDto.getTitle(), updateRequestDto.getDetail());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

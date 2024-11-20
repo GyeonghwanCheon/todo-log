@@ -7,11 +7,13 @@ import java.time.LocalDateTime;
 @Getter
 public class FeedUpdateRequestDto {
 
+    private final String nickname;
     private final String title;
     private final String detail;
     private final LocalDateTime updateAt;
 
-    public FeedUpdateRequestDto(String title, String detail, LocalDateTime updateAt) {
+    public FeedUpdateRequestDto(String nickname ,String title, String detail, LocalDateTime updateAt) {
+        this.nickname = nickname;
         this.title = title;
         this.detail = detail;
         this.updateAt = updateAt;

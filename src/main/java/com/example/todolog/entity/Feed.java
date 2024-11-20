@@ -15,7 +15,6 @@ public class Feed extends BaseEntity {
 
     // 제목
     private String title;
-    private String contents;
 
     // 내용
     @Column(columnDefinition = "longtext")
