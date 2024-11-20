@@ -2,9 +2,6 @@ package com.example.todolog.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -21,25 +18,24 @@ public class Feed extends BaseEntity {
 
     // 내용
     @Column(columnDefinition = "longtext")
-    private String contents;
+    private String detail;
 
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Feed(User user, String title, String contents) {
-        this.user = user;
+    public Feed(String title, String detail) {
         this.title = title;
-        this.contents = contents;
+        this.detail = detail;
     }
 
     // 기본 생성자
     public Feed() {}
 
-    public void update(String title, String contents) {
+    public void updateFeed(String title, String detail) {
         this.title = title;
-        this.contents = contents;
+        this.detail = detail;
     }
 
     public void setUser(User user) {

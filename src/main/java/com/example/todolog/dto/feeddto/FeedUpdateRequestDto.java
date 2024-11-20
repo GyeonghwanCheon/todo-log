@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 public class FeedUpdateRequestDto {
 
     private final String title;
-    private final String contents;
+    private final String detail;
     private final LocalDateTime updateAt;
 
-    public FeedUpdateRequestDto(String title, String contents, LocalDateTime updateAt) {
+    public FeedUpdateRequestDto(String title, String detail, LocalDateTime updateAt) {
         this.title = title;
-        this.contents = contents;
+        this.detail = detail;
         this.updateAt = updateAt;
     }
 }

@@ -4,6 +4,7 @@ package com.example.todolog.controller;
 import com.example.todolog.dto.feeddto.FeedRequestDto;
 import com.example.todolog.dto.feeddto.FeedResponseDto;
 import com.example.todolog.dto.feeddto.FeedUpdateRequestDto;
+import com.example.todolog.repository.UserRepository;
 import com.example.todolog.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,17 +19,22 @@ import java.util.List;
 public class FeedController {
 
     private final FeedService feedService;
+    private final UserRepository userRepository;
 
     // 피드 전체 조회
     @GetMapping
     public ResponseEntity<List<FeedResponseDto>> findAll() {
-        return ResponseEntity.ok().body(feedService.findAll());
+        List<FeedResponseDto> feedResponseDtoList = feedService.findAll();
+
+        return new ResponseEntity<>(feedResponseDtoList, HttpStatus.OK);
     }
 
     // 피드 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<FeedResponseDto> findOne(@PathVariable Long id) {
-        return ResponseEntity.ok().body(feedService.findById(id));
+    public ResponseEntity<FeedResponseDto> findById(@PathVariable Long id) {
+        FeedResponseDto feedResponseDto = feedService.findById(id);
+
+        return new ResponseEntity<>(feedResponseDto, HttpStatus.OK);
     }
 
     // 피드 삭제
@@ -40,14 +46,23 @@ public class FeedController {
 
     // 피드 생성
     @PostMapping
-    public ResponseEntity<FeedResponseDto> createFeed (@RequestBody FeedRequestDto feedRequestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(feedService.createFeed(feedRequestDto));
+    public ResponseEntity<FeedResponseDto> createFeed(@RequestBody FeedRequestDto feedRequestDto) {
+
+        FeedResponseDto feedResponseDto = feedService.save(
+                feedRequestDto.getUserId(),
+                feedRequestDto.getTitle(),
+                feedRequestDto.getDetail());
+
+        return new ResponseEntity<>(feedResponseDto, HttpStatus.CREATED);
+
     }
 
     // 피드 업데이트
     @PatchMapping("/{id}")
     public ResponseEntity<FeedResponseDto> updateFeed(@RequestBody FeedUpdateRequestDto updateRequestDto,
                                                       @PathVariable Long id) {
-        return ResponseEntity.ok().body(feedService.updateFeed(id, updateRequestDto));
+        feedService.updateFeed(id, updateRequestDto.getTitle(), updateRequestDto.getDetail());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

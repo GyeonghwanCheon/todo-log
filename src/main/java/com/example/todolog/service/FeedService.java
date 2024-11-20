@@ -1,15 +1,16 @@
 package com.example.todolog.service;
 
-import com.example.todolog.dto.feeddto.FeedRequestDto;
+
 import com.example.todolog.dto.feeddto.FeedResponseDto;
-import com.example.todolog.dto.feeddto.FeedUpdateRequestDto;
 import com.example.todolog.entity.Feed;
 import com.example.todolog.entity.User;
 import com.example.todolog.repository.FeedRepository;
 import com.example.todolog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -20,48 +21,65 @@ public class FeedService {
     private final FeedRepository feedRepository;
     private final UserRepository userRepository;
 
+
     // 피드 전체 조회
     public List<FeedResponseDto> findAll() {
-        List<Feed> feed = feedRepository.findAll();
 
-        return feed.stream().map(FeedResponseDto::feedDto).toList();
+        return feedRepository.findAll().stream().map(FeedResponseDto::feedDto).toList();
     }
 
     // 피드 단건 조회
     public FeedResponseDto findById(Long id) {
-        return FeedResponseDto.feedDto(findFeedById(id));
-    }
+        Feed findFeed = feedRepository.findByOrElseThrow(id);
 
-    private Feed findFeedById(Long id){
-        return feedRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 ID 입니다."));
+        User user = findFeed.getUser();
+
+        return new FeedResponseDto(
+                findFeed.getId(), user.getNickname(), findFeed.getTitle(), findFeed.getDetail(),
+                findFeed.getCreatedAt(), findFeed.getUpdatedAt()
+        );
+
     }
 
 
     // 피드 삭제
     public void deleteFeed(Long id) {
-        findFeedById(id);
-        feedRepository.deleteById(id);
+        Feed findFeed = feedRepository.findByOrElseThrow(id);
+        feedRepository.delete(findFeed);
     }
 
     // 피드 생성
-    @Transactional
-    public FeedResponseDto createFeed(FeedRequestDto feedRequestDto) {
+    public FeedResponseDto save(Long userId, String title, String contents) {
 
-        User finduser = userRepository.findByIdOrElseThrow(feedRequestDto.getUserId());
+        User findUser = userRepository.findByIdOrElseThrow(userId);
 
-        User savedUser = userRepository.save(finduser);
-
-        Feed feed = new Feed(savedUser, feedRequestDto.getTitle(), feedRequestDto.getContents());
+        Feed feed = new Feed(title, contents);
+        feed.setUser(findUser);
 
         Feed savedFeed = feedRepository.save(feed);
 
-        return FeedResponseDto.feedDto(savedFeed);
+        User nickname = feed.getUser();
+
+        return new FeedResponseDto(savedFeed.getId(), nickname.getNickname(), savedFeed.getTitle(),
+                savedFeed.getDetail(),savedFeed.getCreatedAt(), savedFeed.getUpdatedAt());
     }
 
+
+    // 피드 수정
     @Transactional
-    public FeedResponseDto updateFeed(Long id, FeedUpdateRequestDto updateRequestDto) {
-        Feed feed = findFeedById(id);
-        feed.update(updateRequestDto.getTitle(), updateRequestDto.getContents());
-        return FeedResponseDto.feedDto(feed);
+    public void updateFeed(Long id, String title, String contents) {
+
+        Feed findFeed = feedRepository.findByOrElseThrow(id);
+
+        if(findFeed.getId() == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID가 없습니다.");
+        }
+
+        if(title == null || contents == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "제목 또는 내용이 없습니다.");
+        }
+
+        findFeed.updateFeed(title, contents);
     }
+
 }
