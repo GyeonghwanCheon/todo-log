@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -44,9 +45,19 @@ public class FeedService {
 
 
     // 피드 삭제
-    public void deleteFeed(Long id) {
+    public void deleteFeed(Long id, String nickname) {
         Feed findFeed = feedRepository.findByOrElseThrow(id);
-        feedRepository.delete(findFeed);
+
+        if(findFeed != null) {
+
+            if(Objects.equals(findFeed.getUser().getNickname(), nickname)) {
+                feedRepository.delete(findFeed);
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유저 아이디가 일치하지 않습니다.");
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID 값이 없습니다. = " + id);
+        }
     }
 
     // 피드 생성
@@ -68,9 +79,13 @@ public class FeedService {
 
     // 피드 수정
     @Transactional
-    public void updateFeed(Long id, String title, String contents) {
+    public void updateFeed(Long id, String nickname, String title, String contents) {
 
         Feed findFeed = feedRepository.findByOrElseThrow(id);
+
+        if(!Objects.equals(findFeed.getUser().getNickname(), nickname)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유저 아이디가 일치하지 않습니다.");
+        }
 
         if(findFeed.getId() == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID가 없습니다.");
