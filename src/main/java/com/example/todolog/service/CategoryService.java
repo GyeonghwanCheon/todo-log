@@ -28,9 +28,8 @@ public class CategoryService {
     }
 
     public CreateCategoryResponseDto createSubCategory(Long parentId , String name){
-        //Category findCategory = categoryRepository.findByIdOrElseThrow(parentId);
         int stepCategory = getCategoryList(parentId).getStepCategory();
-        if (stepCategory >= 3){
+        if (stepCategory == 3){
             throw new CustomException(CATEGORY_STEP_OVER);
         }
         Category category = new Category(parentId, name);
@@ -43,31 +42,16 @@ public class CategoryService {
         Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
         Category category = optionalCategory.get();
 
-        //Deque<String> deque = getStringDeque(category);
-        Deque<String> deque = new LinkedList<>();
-        deque.add(category.getName());
-        if (category.getParentId() != null){
-            Optional<Category> optionalCategory2 = categoryRepository.findById(category.getParentId());
-            Category category2 = optionalCategory2.get();
-            deque.add(category2.getName());
-            if (category2.getParentId() != null){
-                Optional<Category> optionalCategory3 = categoryRepository.findById(category2.getParentId());
-                Category category3 = optionalCategory3.get();
-                deque.add(category3.getName());
-                if (category3.getParentId() != null){
-                    deque.add("dummy");
-                }
-            }
-        }
-        int dequeSize = deque.size();
+        Deque<String> deque = getStringDeque(category);
+        //dequeSize 로 categoryStep(단계)확인
+        int categoryStep = deque.size();
 
         //deque 에 넣어두었던 parent categoryName pollLast()
         String firstCategory = deque.pollLast();
         String secondCategory = deque.pollLast();
         String thirdCategory = deque.pollLast();
 
-        return new CategoryResponseDto(firstCategory,secondCategory,thirdCategory ,dequeSize );
-
+        return new CategoryResponseDto(firstCategory , secondCategory , thirdCategory , categoryStep);
     }
 
 
