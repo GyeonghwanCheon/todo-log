@@ -12,9 +12,9 @@ public class LikeFeedResponseDto {
 
     private final Long userId;
 
-    private final Integer likeStatus;
+    private final Boolean likeStatus;
 
-    public LikeFeedResponseDto(Long id, Long feedId, Long userId, Integer likeStatus) {
+    public LikeFeedResponseDto(Long id, Long feedId, Long userId, Boolean likeStatus) {
         this.id = id;
         this.feedId = feedId;
         this.userId = userId;
