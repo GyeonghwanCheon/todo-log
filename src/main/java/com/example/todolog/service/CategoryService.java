@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.example.todolog.error.errorcode.ErrorCode.CATEGORY_STEP_OVER;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -26,16 +28,35 @@ public class CategoryService {
     }
 
     public CreateCategoryResponseDto createSubCategory(Long parentId , String name){
-        Category findCategory = categoryRepository.findByIdOrElseThrow(parentId);
+        int stepCategory = getCategoryList(parentId).getStepCategory();
+        if (stepCategory == 3){
+            throw new CustomException(CATEGORY_STEP_OVER);
+        }
         Category category = new Category(parentId, name);
         categoryRepository.save(category);
 
         return new CreateCategoryResponseDto(category.getId(), category.getParentId(), category.getName());
     }
 
-    public CategoryResponseDto getCategoryList (Long id) {
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
+    public CategoryResponseDto getCategoryList (Long categoryId) {
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
         Category category = optionalCategory.get();
+
+        Deque<String> deque = getStringDeque(category);
+        //dequeSize 로 categoryStep(단계)확인
+        int categoryStep = deque.size();
+
+        //deque 에 넣어두었던 parent categoryName pollLast()
+        String firstCategory = deque.pollLast();
+        String secondCategory = deque.pollLast();
+        String thirdCategory = deque.pollLast();
+
+        return new CategoryResponseDto(firstCategory , secondCategory , thirdCategory , categoryStep);
+    }
+
+
+    //parent categoryName deque 에 add
+    private Deque<String> getStringDeque(Category category) {
         Deque<String> deque = new LinkedList<>();
         deque.add(category.getName());
         if (category.getParentId() != null){
@@ -48,11 +69,6 @@ public class CategoryService {
                 deque.add(category3.getName());
             }
         }
-        String firstCategory = deque.pollLast();
-        String secondCategory = deque.pollLast();
-        String thirdCategory = deque.pollLast();
-
-        return new CategoryResponseDto(firstCategory,secondCategory,thirdCategory);
-
+        return deque;
     }
 }

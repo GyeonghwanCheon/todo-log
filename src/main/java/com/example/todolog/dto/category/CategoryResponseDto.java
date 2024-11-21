@@ -11,10 +11,13 @@ public class CategoryResponseDto {
 
     private final String thirdCategory;
 
+    private final Integer stepCategory;
 
-    public CategoryResponseDto(String firstCategory, String secondCategory, String thirdCategory) {
+
+    public CategoryResponseDto(String firstCategory, String secondCategory, String thirdCategory, Integer stepCategory) {
         this.firstCategory = firstCategory;
         this.secondCategory = secondCategory;
         this.thirdCategory = thirdCategory;
+        this.stepCategory = stepCategory;
     }
 }
