@@ -2,9 +2,7 @@ package com.example.todolog.controller;
 
 import com.example.todolog.dto.LoginRequestDto;
 import com.example.todolog.entity.User;
-import com.example.todolog.error.errorcode.ErrorCode;
 import com.example.todolog.repository.UserRepository;
-import com.example.todolog.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +30,7 @@ public class LoginController {
     public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
 
         // 이메일로 유저를 검색
-        Optional<User> findUserByEmail = userRepository.findUserByEmail(loginRequestDto.getEmail());
+        Optional<User> findUserByEmail = userRepository.findByEmail(loginRequestDto.getEmail());
 
         // 요청 받은 이메일이 없을 경우 401 코드 반환
         if (findUserByEmail.isEmpty()) {
@@ -51,7 +49,7 @@ public class LoginController {
         HttpSession session = request.getSession(true);
 
         // 사용자 이메일을 세션키로 저장
-        session.setAttribute("SessionKey", user.getEmail());
+        session.setAttribute("sessionKey", user.getEmail());
 
         // 200 코드 반환
         return new ResponseEntity(HttpStatus.OK);

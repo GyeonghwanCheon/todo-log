@@ -41,7 +41,7 @@ public class UserService {
 
         // 없는 유저 입력시 404 코드 반환
         if (optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new CustomException(ErrorCode.USERNAME_NOT_FOUND);
         }
 
         // Optional 객체에서 유저 데이터 꺼내기
