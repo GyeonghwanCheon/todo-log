@@ -23,8 +23,9 @@ public enum ErrorCode {
     USERNAME_NOT_FOUND(NOT_FOUND , "해당 username 으로 인한 유저 정보를 찾을 수 없습니다"),
     SCHEDULE_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 일정 정보를 찾을 수 없습니다"),
     COMMENT_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 댓글 정보를 찾을 수 없습니다"),
-    LIKE_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 정보를 찾을 수 없습니다"),
+    LIKE_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 좋아요 정보를 찾을 수 없습니다"),
     FEED_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 피드 정보를 찾을 수 없습니다"),
+    CATEGORY_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 카테고리 정보를 찾을 수 없습니다"),
 
 
 

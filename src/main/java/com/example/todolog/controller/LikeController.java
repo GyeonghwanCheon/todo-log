@@ -55,15 +55,8 @@ public class LikeController {
 
     //validation 예외처리 error
     static ResponseEntity<?> getResponseEntity(BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
-        }
+        ResponseEntity<?> errorMap = CategoryController.getResponseEntity(bindingResult);
+        if (errorMap != null) return errorMap;
         return null;
     }
 }
