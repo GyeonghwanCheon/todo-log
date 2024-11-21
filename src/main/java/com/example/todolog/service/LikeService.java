@@ -80,5 +80,11 @@ public class LikeService {
         return new LikeCommentResponseDto(like.getId() , commentId , userId , like.getLikeStatus());
     }
 
+    public int likeCountByFeedId(Long feedId){
+        return likeRepository.countByFeed_Id(feedId);
+    }
 
+    public int likeCountByCommentId(Long commentId){
+        return likeRepository.countByComment_Id(commentId);
+    }
 }

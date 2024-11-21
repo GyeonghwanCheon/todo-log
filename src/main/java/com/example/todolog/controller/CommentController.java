@@ -39,10 +39,10 @@ public class CommentController {
 
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
-//        User loginUser = (User) session.getAttribute("SessionKey");
+        User loginUser = (User) session.getAttribute("sessionKey");
 
 
-        CommentResponseDto commentResponseDto = commentService.save(requestDto.getFeedId() , 1L , requestDto.getDetail());
+        CommentResponseDto commentResponseDto = commentService.save(requestDto.getFeedId() , loginUser.getId() , requestDto.getDetail());
 
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }

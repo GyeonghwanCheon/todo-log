@@ -33,5 +33,7 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     }
 
 
+    int countByFeed_Id(Long feedId);
 
+    int countByComment_Id(Long commentId);
 }
