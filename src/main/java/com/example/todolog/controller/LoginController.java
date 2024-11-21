@@ -48,8 +48,8 @@ public class LoginController {
         // 세션 생성
         HttpSession session = request.getSession(true);
 
-        // 사용자 이메일을 세션키로 저장
-        session.setAttribute("sessionKey", user.getEmail());
+        // 사용자 세션키로 저장
+        session.setAttribute("sessionKey", user);
 
         // 200 코드 반환
         return new ResponseEntity(HttpStatus.OK);
