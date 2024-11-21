@@ -1,12 +1,14 @@
 package com.example.todolog.dto.comment;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
 public class CreateCommentRequestDto {
 
+    @NotNull(message = "feedId 는 필수값 입니다.")
     private final Long feedId;
 
     @NotBlank(message = "detail 은 필수값 입니다.")
@@ -18,4 +20,5 @@ public class CreateCommentRequestDto {
         this.feedId = feedId;
         this.detail = detail;
     }
+
 }

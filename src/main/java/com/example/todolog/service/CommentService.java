@@ -47,6 +47,7 @@ public class CommentService {
 
     @Transactional
     public void updateComment (Long id , Long userId , String detail){
+
         Comment findComment = commentRepository.findByIdOrElseThrow(id);
         Long commentUserid = findComment.getUser().getId();
         //요청유저가 작성자인지 판별
@@ -59,6 +60,7 @@ public class CommentService {
 
 
     public void delete(Long id, Long userId){
+
         Comment findComment = commentRepository.findByIdOrElseThrow(id);
         Long commentUserid=findComment.getUser().getId();
         User findUser = userRepository.findByIdOrElseThrow(userId);
