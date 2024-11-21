@@ -7,7 +7,6 @@ import com.example.todolog.dto.feeddto.FeedUpdateRequestDto;
 import com.example.todolog.entity.Feed;
 import com.example.todolog.entity.User;
 import com.example.todolog.repository.FeedRepository;
-import com.example.todolog.repository.UserRepository;
 import com.example.todolog.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +26,6 @@ import java.util.List;
 public class FeedController {
 
     private final FeedService feedService;
-    private final UserRepository userRepository;
     private final FeedRepository feedRepository;
 
     // 피드 전체 조회
@@ -48,9 +45,6 @@ public class FeedController {
         List<FeedResponseDto> feedByPageRequest = feedService.findFeedByPageRequest(pageable);
         return feedByPageRequest;
     }
-
-
-
 
 
     // 피드 단건 조회
