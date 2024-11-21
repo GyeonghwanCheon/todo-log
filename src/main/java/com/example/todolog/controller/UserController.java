@@ -50,11 +50,11 @@ public class UserController {
     }
 
     // 유저 프로필 수정 메서드
-    @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateRequestDto dto){
+    @PatchMapping("/{id}/profile")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateProfileRequestDto dto){
 
         // 새로운 mbti, 상태메세지 정보 넘기기
-        userService.updateUser(id,dto.getNewMbti(), dto.getNewStatusMs());
+        userService.updateProfile(id,dto.getNewMbti(), dto.getNewStatusMs());
 
         // 유저 프로필 수정 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);

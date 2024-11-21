@@ -69,13 +69,13 @@ public class UserService {
 
     // 유저 프로필 수정 메서드
     @Transactional
-    public void updateUser(Long id, String newMbti, String newStatusMs) {
+    public void updateProfile(Long id, String newMbti, String newStatusMs) {
 
         // 요청받은 ID 로 유저 데이터 조회, 없으면 예외 표시
         User finduser = userRepository.findByIdOrElseThrow(id);
 
         // 요청받은 mbti, 상태메세지 수정
-        finduser.updateUser(newMbti,newStatusMs);
+        finduser.updateProfile(newMbti,newStatusMs);
     }
 
     // 유저 비밀번호 수정 메서드
