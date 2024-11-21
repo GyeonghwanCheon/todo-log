@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
+    INVALID_PASSWORD_FORMAT(BAD_REQUEST,"비밀번호는 최소 8글자, 영문 + 숫자 + 특수문자로 입력해주십시오."),
 
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
@@ -25,6 +26,7 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 댓글 정보를 찾을 수 없습니다"),
     LIKE_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 정보를 찾을 수 없습니다"),
     FEED_NOT_FOUND(NOT_FOUND , "해당 id 로 인한 피드 정보를 찾을 수 없습니다"),
+
 
 
 

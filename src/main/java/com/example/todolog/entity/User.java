@@ -39,7 +39,7 @@ public class User extends BaseEntity {
     }
 
     // 생성자 (회원가입)
-    public User( String nickname, String password, String email) {
+    public User(String nickname, String password, String email) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
@@ -48,5 +48,9 @@ public class User extends BaseEntity {
     public void updateUser(String mbti, String statusMs) {
         this.mbti = mbti;
         this.statusMs = statusMs;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }

@@ -7,11 +7,10 @@ import com.example.todolog.error.errorcode.ErrorCode;
 import com.example.todolog.error.exception.CustomException;
 import com.example.todolog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 // 유저 비즈니스 로직
@@ -77,6 +76,38 @@ public class UserService {
 
         // 요청받은 mbti, 상태메세지 수정
         finduser.updateUser(newMbti,newStatusMs);
+    }
+
+    // 유저 비밀번호 수정 메서드
+    public void updatePassword(Long id, String oldPassword, String newPassword) {
+
+        // 요청받은 ID로 유저 데이터 조회, 없으면 예외 표시
+        User finduser = userRepository.findByIdOrElseThrow(id);
+
+        // 새 비밀번호 형식 검증
+        if (!isValidPassword(newPassword)){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
+        }
+
+        // 현재 비밀번호 검증
+        if(!Objects.equals(finduser.getPassword(), oldPassword)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
+        }
+
+        // 현재 비밀번호와 새 비밀번호의 동일 여부 검증
+        if(Objects.equals(oldPassword, newPassword)) {
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
+
+        // 입력한 새 비밀번호 적용
+        finduser.updatePassword(newPassword);
+    }
+
+    // 비밀번호 형식 검증 메서드
+    private boolean isValidPassword(String password) {
+        // 최소 8자, 대소문자 영문, 숫자, 특수문자를 각각 최소 1개 이상 포함
+        String validPassword = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,}$";
+        return password.matches(validPassword);
     }
 
     // 유저 삭제 메서드
