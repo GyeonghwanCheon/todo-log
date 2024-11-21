@@ -2,9 +2,16 @@ package com.example.todolog.controller;
 
 
 
+import com.example.todolog.dto.feeddto.FeedResponseDto;
 import com.example.todolog.dto.follow.FollowDto;
+import com.example.todolog.entity.Feed;
+import com.example.todolog.service.FeedService;
 import com.example.todolog.service.FollowService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +23,7 @@ import java.util.List;
 public class FollowController {
 
     private final FollowService followService;
+    private final FeedService feedService;
 
     // 팔로우하기
     @PostMapping("/{followerNickname}/{followingNickname}")
@@ -45,4 +53,9 @@ public class FollowController {
         return ResponseEntity.ok("팔로우 삭제 완료!");
     }
 
+//    // 사용자의 팔로워 게시글 조회
+    @GetMapping("/{nickname}/followingFeeds")
+    public List<FeedResponseDto> findFollowingFeeds(@PathVariable String nickname) {
+        return followService.findFollowingFeeds(nickname);
+    }
 }

@@ -1,10 +1,13 @@
 package com.example.todolog.service;
 
+import com.example.todolog.dto.feeddto.FeedResponseDto;
 import com.example.todolog.dto.follow.FollowDto;
+import com.example.todolog.entity.Feed;
 import com.example.todolog.entity.Follow;
 import com.example.todolog.entity.User;
 import com.example.todolog.error.errorcode.ErrorCode;
 import com.example.todolog.error.exception.CustomException;
+import com.example.todolog.repository.FeedRepository;
 import com.example.todolog.repository.FollowRepository;
 import com.example.todolog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ public class FollowService {
 
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final FeedRepository feedRepository;
 
     // 팔로우 신청
     public void followUser(String followerNickname, String followingNickname) {
@@ -95,4 +99,23 @@ public class FollowService {
 
         followRepository.delete(follow);
     }
+
+
+    // 사용자 팔로워 최신 게시물 조회
+    public List<FeedResponseDto> findFollowingFeeds(String nickname) {
+        User user = userRepository.findByNickname(nickname).orElseThrow(
+                () -> new CustomException(ErrorCode.DUPLICATE_RESOURCE));
+
+        List<User> followingUsers = followRepository.findByFollower(user)
+                .stream()
+                .map(Follow::getFollowing)
+                .collect(Collectors.toList());
+
+        List<Feed> feeds = feedRepository.findByUserInOrderByCreatedAtDesc(followingUsers);
+
+        return feeds.stream()
+                .map(FeedResponseDto::feedDto)
+                .collect(Collectors.toList());
+    }
+
 }
