@@ -3,6 +3,8 @@ package com.example.todolog.service;
 import com.example.todolog.dto.UserResponseDto;
 import com.example.todolog.dto.SignupResponseDto;
 import com.example.todolog.entity.User;
+import com.example.todolog.error.errorcode.ErrorCode;
+import com.example.todolog.error.exception.CustomException;
 import com.example.todolog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,9 @@ public class UserService {
     // 회원가입 메서드
     public SignupResponseDto signup(String nickname, String password, String email) {
 
+        // 기존 유저 확인
+        checkAlreadySignup(email);
+
         // 입력 받은 정보로 객체 생성
         User user = new User(nickname, password, email);
 
@@ -31,6 +36,18 @@ public class UserService {
 
         // 객체 정보 반환
         return new SignupResponseDto(savedUser.getId(), savedUser.getNickname(), savedUser.getEmail());
+    }
+
+    // 기존 유저 확인 메서드
+    private void checkAlreadySignup(String email) {
+
+        // 유저 데이터 가져오기
+        Optional<User> checkUser = userRepository.findByEmail(email);
+
+        // 가져온 데이터가 존재한다면 예외 발생
+        if (checkUser.isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
     }
 
     // 유저 조회 메서드
