@@ -61,7 +61,7 @@ public class CommentController {
 
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
-        User loginUser = (User) session.getAttribute(Const.LOGIN_USER);
+        User loginUser = (User) session.getAttribute("sessionKey");
 
         commentService.updateComment(id, loginUser.getId(), detailMap.get("detail"));
         return new ResponseEntity<>(HttpStatus.OK);
@@ -71,7 +71,7 @@ public class CommentController {
     public ResponseEntity<Void> delete(@PathVariable Long id,HttpServletRequest request){
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
-        User loginUser = (User) session.getAttribute(Const.LOGIN_USER);
+        User loginUser = (User) session.getAttribute("sessionKey");
         commentService.delete(id,loginUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -4,7 +4,10 @@ import com.example.todolog.dto.category.CategoryResponseDto;
 import com.example.todolog.dto.category.CreateCategoryRequestDto;
 import com.example.todolog.dto.category.CreateCategoryResponseDto;
 import com.example.todolog.dto.comment.CommentResponseDto;
+import com.example.todolog.entity.User;
 import com.example.todolog.service.CategoryService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,21 +36,29 @@ public class CategoryController {
         ResponseEntity<?> errorMap = getResponseEntity(bindingResult);
         if (errorMap != null) return errorMap;
 
-        CreateCategoryResponseDto categoryResponseDto;
-        if (parentId ==null){
-             categoryResponseDto = categoryService.createCategory(requestDto.getName());
+        CreateCategoryResponseDto createCategoryResponseDto;
+        if (parentId == null){
+            createCategoryResponseDto = categoryService.createCategory(requestDto.getName());
         }else {
-             categoryResponseDto = categoryService.createSubCategory(parentId,requestDto.getName());
+            createCategoryResponseDto = categoryService.createSubCategory(parentId,requestDto.getName());
         }
 
-        return new ResponseEntity<>(categoryResponseDto , HttpStatus.CREATED);
+        return new ResponseEntity<>(createCategoryResponseDto , HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponseDto> findById(@PathVariable Long id){
-        CategoryResponseDto categoryResponseDto = categoryService.getCategoryList(id);
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponseDto> findById(@PathVariable Long categoryId){
+        CategoryResponseDto categoryResponseDto = categoryService.getCategoryList(categoryId);
         return new ResponseEntity<>(categoryResponseDto , HttpStatus.OK);
     }
+
+
+
+
+
+
+
+
 
 
     static ResponseEntity<?> getResponseEntity(BindingResult bindingResult) {

@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
+    CATEGORY_STEP_OVER(BAD_REQUEST , "카테고리는 3단계 까지 가능합니다."),
 
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */

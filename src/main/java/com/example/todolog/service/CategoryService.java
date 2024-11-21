@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.example.todolog.error.errorcode.ErrorCode.CATEGORY_STEP_OVER;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -26,16 +28,51 @@ public class CategoryService {
     }
 
     public CreateCategoryResponseDto createSubCategory(Long parentId , String name){
-        Category findCategory = categoryRepository.findByIdOrElseThrow(parentId);
+        //Category findCategory = categoryRepository.findByIdOrElseThrow(parentId);
+        int stepCategory = getCategoryList(parentId).getStepCategory();
+        if (stepCategory >= 3){
+            throw new CustomException(CATEGORY_STEP_OVER);
+        }
         Category category = new Category(parentId, name);
         categoryRepository.save(category);
 
         return new CreateCategoryResponseDto(category.getId(), category.getParentId(), category.getName());
     }
 
-    public CategoryResponseDto getCategoryList (Long id) {
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
+    public CategoryResponseDto getCategoryList (Long categoryId) {
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
         Category category = optionalCategory.get();
+
+        //Deque<String> deque = getStringDeque(category);
+        Deque<String> deque = new LinkedList<>();
+        deque.add(category.getName());
+        if (category.getParentId() != null){
+            Optional<Category> optionalCategory2 = categoryRepository.findById(category.getParentId());
+            Category category2 = optionalCategory2.get();
+            deque.add(category2.getName());
+            if (category2.getParentId() != null){
+                Optional<Category> optionalCategory3 = categoryRepository.findById(category2.getParentId());
+                Category category3 = optionalCategory3.get();
+                deque.add(category3.getName());
+                if (category3.getParentId() != null){
+                    deque.add("dummy");
+                }
+            }
+        }
+        int dequeSize = deque.size();
+
+        //deque 에 넣어두었던 parent categoryName pollLast()
+        String firstCategory = deque.pollLast();
+        String secondCategory = deque.pollLast();
+        String thirdCategory = deque.pollLast();
+
+        return new CategoryResponseDto(firstCategory,secondCategory,thirdCategory ,dequeSize );
+
+    }
+
+
+    //parent categoryName deque 에 add
+    private Deque<String> getStringDeque(Category category) {
         Deque<String> deque = new LinkedList<>();
         deque.add(category.getName());
         if (category.getParentId() != null){
@@ -48,11 +85,6 @@ public class CategoryService {
                 deque.add(category3.getName());
             }
         }
-        String firstCategory = deque.pollLast();
-        String secondCategory = deque.pollLast();
-        String thirdCategory = deque.pollLast();
-
-        return new CategoryResponseDto(firstCategory,secondCategory,thirdCategory);
-
+        return deque;
     }
 }
