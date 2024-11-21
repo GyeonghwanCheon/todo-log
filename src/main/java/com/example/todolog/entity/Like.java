@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Entity
-@Table(name = "comment")
-public class Comment extends BaseEntity {
+@Table(name = "\"like\"")
+public class Like extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,20 +24,17 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "feed_id")
     private Feed feed;
 
-    //내용
-    private String detail;
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
-    public Comment() {
+    private Integer likeStatus;
 
+    public Like() {
     }
 
-    public Comment(String  detail){
-        this.detail=detail;
+    public void updateLikeStatus(int likeStatus){
+        this.likeStatus = likeStatus;
     }
-
-    public void updateDetail(String detail){
-        this.detail=detail;
-    }
-
-
 }

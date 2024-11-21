@@ -34,19 +34,14 @@ public class CommentController {
             HttpServletRequest request){
 
         //validation 예외 처리
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
-        }
+        ResponseEntity<?> errorMap = LikeController.getResponseEntity(bindingResult);
+        if (errorMap != null) return errorMap;
 
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
-        User loginUser = (User) session.getAttribute(Const.LOGIN_USER);
+        //User loginUser = (User) session.getAttribute(Const.LOGIN_USER);
 
-        CommentResponseDto commentResponseDto = commentService.save(requestDto.getFeedId() , loginUser.getId() , requestDto.getDetail());
+        CommentResponseDto commentResponseDto = commentService.save(requestDto.getFeedId() , 1L , requestDto.getDetail());
 
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
@@ -79,4 +74,5 @@ public class CommentController {
         commentService.delete(id,loginUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
