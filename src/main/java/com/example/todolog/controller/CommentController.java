@@ -39,7 +39,8 @@ public class CommentController {
 
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
-        //User loginUser = (User) session.getAttribute(Const.LOGIN_USER);
+//        User loginUser = (User) session.getAttribute("SessionKey");
+
 
         CommentResponseDto commentResponseDto = commentService.save(requestDto.getFeedId() , 1L , requestDto.getDetail());
 
