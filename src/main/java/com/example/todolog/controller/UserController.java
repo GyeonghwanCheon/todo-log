@@ -70,6 +70,7 @@ public class UserController {
         // 유저 비밀번호 수정 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     // 유저 삭제 메서드
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
@@ -77,6 +78,7 @@ public class UserController {
         // 유저 삭제 로직 실행
         userService.deleteUser(id);
 
+        // 유저 삭제 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
