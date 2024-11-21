@@ -2,7 +2,8 @@ package com.example.todolog.controller;
 
 import com.example.todolog.dto.SignupRequestDto;
 import com.example.todolog.dto.SignupResponseDto;
-import com.example.todolog.dto.UpdateRequestDto;
+import com.example.todolog.dto.UpdatePasswordRequestDto;
+import com.example.todolog.dto.UpdateProfileRequestDto;
 import com.example.todolog.dto.UserResponseDto;
 import com.example.todolog.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -49,13 +50,24 @@ public class UserController {
     }
 
     // 유저 프로필 수정 메서드
-    @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateRequestDto dto){
+    @PatchMapping("/{id}/profile")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateProfileRequestDto dto){
 
         // 새로운 mbti, 상태메세지 정보 넘기기
-        userService.updateUser(id,dto.getNewMbti(), dto.getNewStatusMs());
+        userService.updateProfile(id,dto.getNewMbti(), dto.getNewStatusMs());
 
         // 유저 프로필 수정 성공시 201 코드 반환
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 유저 비밀번호 수정 메서드
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<UserResponseDto> updatePassword(@PathVariable Long id, @RequestBody UpdatePasswordRequestDto dto) {
+
+        // 이전 비밀번호, 새로운 비밀번호 정보 넘기기
+        userService.updatePassword(id,dto.getOldPassword(),dto.getNewPassword());
+
+        // 유저 비밀번호 수정 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -66,6 +78,7 @@ public class UserController {
         // 유저 삭제 로직 실행
         userService.deleteUser(id);
 
+        // 유저 삭제 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

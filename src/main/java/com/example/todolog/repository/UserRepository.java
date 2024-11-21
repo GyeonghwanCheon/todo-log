@@ -1,6 +1,8 @@
 package com.example.todolog.repository;
 
 import com.example.todolog.entity.User;
+import com.example.todolog.error.errorcode.ErrorCode;
+import com.example.todolog.error.exception.CustomException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 요청받은 ID가 DB에 있는지 확인하기
     default User findByIdOrElseThrow(Long id){
-        return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return findById(id).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 }
