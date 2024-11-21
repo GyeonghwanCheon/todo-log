@@ -27,6 +27,11 @@ public class UserService {
         // 기존 유저 확인
         checkAlreadySignup(email);
 
+        // 비밀번호 양식 검증
+        if (!isValidPassword(password)){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
+        }
+
         // 입력 받은 정보로 객체 생성
         User user = new User(nickname, password, email);
 
