@@ -27,25 +27,23 @@ public class LikeService {
 
     @Transactional
     public LikeFeedResponseDto likeFeed (Long feedId , Long userId){
+
         Feed findFeed = feedRepository.findByOrElseThrow(feedId);
         User fineUser = userRepository.findByIdOrElseThrow(userId);
+        //feedId,userId 에 대한 like data
         Optional<Like> optionalLike = likeRepository.findByFeed_IdAndUser_Id(feedId,userId);
 
+        //처음 좋아요 기능 구현시 like data 생성
         if (optionalLike.isEmpty()){
             Like like = new Like();
             like.setFeed(findFeed);
             like.setUser(fineUser);
-            like.updateLikeStatus(0);
+            like.updateLikeStatus(false);
             likeRepository.save(like);
         }
-
+        //이후 좋아요 기능 구현시 like data 수정
         Like findlike = likeRepository.findByFeed_IdAndUser_IdOrElseThrow(feedId,userId);
-        switch (findlike.getLikeStatus()){
-            case 0 : findlike.updateLikeStatus(1);
-                     break;
-            case 1 : findlike.updateLikeStatus(0);
-                     break;
-        }
+        findlike.updateLikeStatus(!findlike.getLikeStatus());
 
         Like like = likeRepository.findByFeed_IdAndUser_IdOrElseThrow(feedId,userId);
 
@@ -63,20 +61,23 @@ public class LikeService {
             Like like = new Like();
             like.setComment(findComment);
             like.setUser(fineUser);
-            like.updateLikeStatus(0);
+            like.updateLikeStatus(false);
             likeRepository.save(like);
         }
 
        Like findlike = likeRepository.findByComment_IdAndUser_IdOrElseThrow(commentId,userId);
-        switch (findlike.getLikeStatus()){
-            case 0 : findlike.updateLikeStatus(1);
-                break;
-            case 1 : findlike.updateLikeStatus(0);
-                break;
-        }
+       findlike.updateLikeStatus(!findlike.getLikeStatus());
 
        Like like = likeRepository.findByComment_IdAndUser_IdOrElseThrow(commentId,userId);
 
         return new LikeCommentResponseDto(like.getId() , commentId , userId , like.getLikeStatus());
+    }
+
+    public int likeCountByFeedId(Long feedId){
+        return likeRepository.countByFeed_IdAndLikeStatus(feedId,true);
+    }
+
+    public int likeCountByCommentId(Long commentId){
+        return likeRepository.countByComment_IdAndLikeStatus(commentId,true);
     }
 }

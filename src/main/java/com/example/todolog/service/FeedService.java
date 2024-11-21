@@ -9,6 +9,7 @@ import com.example.todolog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +29,9 @@ public class FeedService {
 
     // 피드 전체 조회
     public List<FeedResponseDto> findAll() {
-        List<Feed> feed = feedRepository.findAll();
+        List<Feed> feed = feedRepository.findAll(Sort.by(Sort.Direction.DESC, "updatedAt"));
 
-        return feedRepository.findAll().stream().map(FeedResponseDto::feedDto).toList();
+        return feed.stream().map(FeedResponseDto::feedDto).toList();
     }
 
 
@@ -103,8 +104,8 @@ public class FeedService {
         findFeed.updateFeed(title, contents);
     }
 
-    // 페이징 조회
-    public List<FeedResponseDto> findFeedByPageRequest(Pageable pageable) {
+    // 페이징 조회 수정일자순
+    public List<FeedResponseDto> findFeedByPage(Pageable pageable) {
 
         List<FeedResponseDto> feedResponseDtoList = new ArrayList<>();
         Page<Feed> feedPage = feedRepository.findAll(pageable);

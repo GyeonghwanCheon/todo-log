@@ -29,12 +29,12 @@ public class Like extends BaseEntity{
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    private Integer likeStatus;
+    private Boolean likeStatus;
 
     public Like() {
     }
 
-    public void updateLikeStatus(int likeStatus){
+    public void updateLikeStatus(Boolean likeStatus){
         this.likeStatus = likeStatus;
     }
 }
