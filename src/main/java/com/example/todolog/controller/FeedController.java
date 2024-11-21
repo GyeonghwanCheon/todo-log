@@ -36,13 +36,13 @@ public class FeedController {
         return new ResponseEntity<>(feedResponseDtoList, HttpStatus.OK);
     }
 
-    // 페이징 조회
-    @GetMapping("/paging")
-    public List<FeedResponseDto> findFeedByPageRequest(
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    // 페이징 조회, 수정일자순 조회
+    @GetMapping("/paging/updatedAt")
+    public List<FeedResponseDto> findFeedByUpdatedAtPage(
+            @PageableDefault(size = 10, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         log.info("sorted ={}", pageable.getSort());
-        List<FeedResponseDto> feedByPageRequest = feedService.findFeedByPageRequest(pageable);
+        List<FeedResponseDto> feedByPageRequest = feedService.findFeedByPage(pageable);
         return feedByPageRequest;
     }
 
