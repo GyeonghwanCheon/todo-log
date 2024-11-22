@@ -2,7 +2,6 @@ package com.example.todolog.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Entity
@@ -26,6 +25,10 @@ public class Feed extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     public Feed(String title, String detail) {
         this.title = title;
         this.detail = detail;
@@ -43,5 +46,7 @@ public class Feed extends BaseEntity {
         this.user = user;
     }
 
-
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }
