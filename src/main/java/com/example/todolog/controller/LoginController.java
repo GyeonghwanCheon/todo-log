@@ -1,5 +1,6 @@
 package com.example.todolog.controller;
 
+import com.example.todolog.config.PasswordEncoder;
 import com.example.todolog.dto.LoginRequestDto;
 import com.example.todolog.entity.User;
 import com.example.todolog.error.errorcode.ErrorCode;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
 import java.util.Optional;
 
 // 로그인 컨트롤러
@@ -26,6 +26,7 @@ public class LoginController {
 
     // 의존성 주입
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 로그인 요청 처리 메서드
     @GetMapping("/login")
@@ -43,7 +44,7 @@ public class LoginController {
         User user = findUserByEmail.get();
 
         // 비밀번호 검증, 불 일치시에 404 코드 반환
-        if (!Objects.equals(user.getPassword(), loginRequestDto.getPassword())) {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
         }
 
