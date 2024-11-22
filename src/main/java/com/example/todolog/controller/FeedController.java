@@ -62,24 +62,24 @@ public class FeedController {
     }
 
     // 피드 단건 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<FeedResponseDto> findById(@PathVariable Long id) {
-        FeedResponseDto feedResponseDto = feedService.findById(id);
+    @GetMapping("/{feedid}")
+    public ResponseEntity<FeedResponseDto> findById(@PathVariable Long feedid) {
+        FeedResponseDto feedResponseDto = feedService.findById(feedid);
 
         return new ResponseEntity<>(feedResponseDto, HttpStatus.OK);
     }
 
     // 피드 삭제
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{feedid}")
     public ResponseEntity<String> deleteFeed(
-            @PathVariable Long id,
+            @PathVariable Long feedid,
             HttpServletRequest request) {
 
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
         User loginUser = (User) session.getAttribute("sessionKey");
 
-        feedService.deleteFeed(id, loginUser.getId());
+        feedService.deleteFeed(feedid, loginUser.getId());
         return ResponseEntity.ok().body("정상적으로 삭제 되었습니다.");
     }
 
@@ -103,19 +103,19 @@ public class FeedController {
     }
 
     // 피드 업데이트
-    @PatchMapping("/{id}")
+    @PatchMapping("/{feedid}")
     public ResponseEntity<FeedResponseDto> updateFeed(
             @RequestBody FeedUpdateRequestDto updateRequestDto,
-            @PathVariable Long id,
+            @PathVariable Long feedid,
             HttpServletRequest request) {
 
-        Feed findFeed = feedRepository.findByOrElseThrow(id);
+        Feed findFeed = feedRepository.findByOrElseThrow(feedid);
 
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
         User loginUser = (User) session.getAttribute("sessionKey");
 
-        feedService.updateFeed(id, loginUser.getId() ,updateRequestDto.getTitle(), updateRequestDto.getDetail());
+        feedService.updateFeed(feedid, loginUser.getId() ,updateRequestDto.getTitle(), updateRequestDto.getDetail());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

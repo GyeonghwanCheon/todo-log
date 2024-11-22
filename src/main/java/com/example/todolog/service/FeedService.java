@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.todolog.error.errorcode.ErrorCode.UNAUTHORIZED_USER;
+import static com.example.todolog.error.errorcode.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -65,8 +65,8 @@ public class FeedService {
 
 
     // 피드 단건 조회
-    public FeedResponseDto findById(Long id) {
-        Feed findFeed = feedRepository.findByOrElseThrow(id);
+    public FeedResponseDto findById(Long feedid) {
+        Feed findFeed = feedRepository.findByOrElseThrow(feedid);
         User user = findFeed.getUser();
         Category category = findFeed.getCategory();
 
@@ -81,7 +81,7 @@ public class FeedService {
         );
 
         // 좋아요 수 조회
-        int likeCount = likeRepository.countByFeed_IdAndLikeStatus(id, true);
+        int likeCount = likeRepository.countByFeed_IdAndLikeStatus(feedid, true);
         feedResponseDto.setLikeCount(likeCount);
 
         return feedResponseDto;
@@ -89,8 +89,8 @@ public class FeedService {
 
 
     // 피드 삭제
-    public void deleteFeed(Long id, Long loginUserId) {
-        Feed findFeed = feedRepository.findByOrElseThrow(id);
+    public void deleteFeed(Long feedid, Long loginUserId) {
+        Feed findFeed = feedRepository.findByOrElseThrow(feedid);
         Long feedUserId = findFeed.getUser().getId();
         User findUser = userRepository.findByIdOrElseThrow(loginUserId);
 
@@ -125,9 +125,9 @@ public class FeedService {
 
     // 피드 수정
     @Transactional
-    public void updateFeed(Long id, Long loginUserId, String title, String contents) {
+    public void updateFeed(Long feedid, Long loginUserId, String title, String contents) {
 
-        Feed findFeed = feedRepository.findByOrElseThrow(id);
+        Feed findFeed = feedRepository.findByOrElseThrow(feedid);
         Long feedUserId = findFeed.getUser().getId();
         //요청유저가 작성자인지 판별
         User findUser = userRepository.findByIdOrElseThrow(loginUserId);
@@ -137,11 +137,11 @@ public class FeedService {
         }
 
         if(findFeed.getId() == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID가 없습니다.");
+            throw new CustomException(ID_NOT_FOUND);
         }
 
         if(title == null || contents == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "제목 또는 내용이 없습니다.");
+            throw new CustomException(TITLE_DETAIL_NULL);
         }
 
         findFeed.updateFeed(title, contents);
