@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 
-@Setter
+
 @Getter
 public class FeedResponseDto {
 
@@ -17,7 +17,10 @@ public class FeedResponseDto {
     private final String categoryname;
     private final String title;
     private final String detail;
+
+    @Setter
     private int likeCount;
+
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 

@@ -146,7 +146,7 @@ public class FeedService {
     }
 
     // 페이징 조회 수정일자순
-    public List<FeedResponseDto> findFeedByPage(Pageable pageable) {
+    public List<FeedResponseDto> findFeedByUpdatedPage(Pageable pageable) {
 
         List<FeedResponseDto> feedResponseDtoList = new ArrayList<>();
         Page<Feed> feedPage = feedRepository.findAll(pageable);
@@ -175,4 +175,40 @@ public class FeedService {
         return feedResponseDtoList;
 //        return feedRepository.findAll(pageable).getContent().stream().map(FeedResponseDto::feedDto).toList();
     }
+
+
+    // 페이징 조회 좋아요 순
+    public List<FeedResponseDto> findFeedByLikeCountPage(Pageable pageable) {
+
+        List<FeedResponseDto> feedResponseDtoList = new ArrayList<>();
+        Page<Feed> feedPage = feedRepository.findAll(pageable);
+        List<Feed> feedList = feedPage.getContent();
+        // Feed에서 User 객체를 제외하고 나머지 필드들만 불러와서 반환.
+
+        for (Feed feed : feedList) {
+            //FeedResponseDto에 Feed 필드를 넣는다.
+            FeedResponseDto feedResponseDto = new FeedResponseDto(
+                    feed.getId(),
+                    feed.getCategory().getName(),
+                    feed.getUser().getNickname(),
+                    feed.getTitle(),
+                    feed.getDetail(),
+                    feed.getCreatedAt(),
+                    feed.getUpdatedAt()
+            );
+
+            // 좋아요 수 조회
+            int likeCount = likeRepository.countByFeed_IdAndLikeStatus(feed.getId(), true);
+            feedResponseDto.setLikeCount(likeCount);
+
+            feedResponseDtoList.add(feedResponseDto);
+        }
+
+        // 좋아요 수 기준으로 정렬 (내림차순)
+        feedResponseDtoList.sort((a, b) -> Integer.compare(b.getLikeCount(), a.getLikeCount()));
+
+        return feedResponseDtoList;
+//        return feedRepository.findAll(pageable).getContent().stream().map(FeedResponseDto::feedDto).toList();
+    }
+
 }
