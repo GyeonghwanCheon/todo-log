@@ -8,6 +8,8 @@ import com.example.todolog.entity.Feed;
 import com.example.todolog.entity.User;
 import com.example.todolog.repository.FeedRepository;
 import com.example.todolog.service.FeedService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +48,6 @@ public class FeedController {
         return feedByPageRequest;
     }
 
-
     // 피드 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<FeedResponseDto> findById(@PathVariable Long id) {
@@ -59,18 +60,28 @@ public class FeedController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteFeed(
             @PathVariable Long id,
-            @RequestBody FeedRequestDto dto) {
+            HttpServletRequest request) {
 
-        feedService.deleteFeed(id, dto.getNickname());
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("sessionKey");
+
+        feedService.deleteFeed(id, loginUser.getId());
         return ResponseEntity.ok().body("정상적으로 삭제 되었습니다.");
     }
 
     // 피드 생성
     @PostMapping
-    public ResponseEntity<FeedResponseDto> createFeed(@RequestBody FeedRequestDto feedRequestDto) {
+    public ResponseEntity<FeedResponseDto> createFeed(@RequestBody FeedRequestDto feedRequestDto,
+                                                      HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("sessionKey");
 
         FeedResponseDto feedResponseDto = feedService.save(
-                feedRequestDto.getUserId(),
+                loginUser.getId(),
+                feedRequestDto.getCategoryid(),
                 feedRequestDto.getTitle(),
                 feedRequestDto.getDetail());
 
@@ -80,14 +91,18 @@ public class FeedController {
 
     // 피드 업데이트
     @PatchMapping("/{id}")
-    public ResponseEntity<FeedResponseDto> updateFeed(@RequestBody FeedUpdateRequestDto updateRequestDto,
-                                                      @PathVariable Long id) {
+    public ResponseEntity<FeedResponseDto> updateFeed(
+            @RequestBody FeedUpdateRequestDto updateRequestDto,
+            @PathVariable Long id,
+            HttpServletRequest request) {
 
         Feed findFeed = feedRepository.findByOrElseThrow(id);
 
-        User user = findFeed.getUser();
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("sessionKey");
 
-        feedService.updateFeed(id, updateRequestDto.getNickname() ,updateRequestDto.getTitle(), updateRequestDto.getDetail());
+        feedService.updateFeed(id, loginUser.getId() ,updateRequestDto.getTitle(), updateRequestDto.getDetail());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
