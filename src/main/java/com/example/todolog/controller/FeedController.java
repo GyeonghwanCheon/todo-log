@@ -43,9 +43,21 @@ public class FeedController {
     public List<FeedResponseDto> findFeedByUpdatedAtPage(
             @PageableDefault(size = 10, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        log.info("sorted ={}", pageable.getSort());
-        List<FeedResponseDto> feedByPageRequest = feedService.findFeedByPage(pageable);
-        return feedByPageRequest;
+        log.info("sorted = {}", pageable.getSort());
+        List<FeedResponseDto> feedByUpdatedPage = feedService.findFeedByUpdatedPage(pageable);
+
+        return feedByUpdatedPage;
+    }
+
+    //페이징 조회, 좋아요 많은 순 조회
+    @GetMapping("/paging/like")
+    public List<FeedResponseDto> findFeedByLikeCountPage(
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        log.info("sorted = {}", pageable.getSort());
+        List<FeedResponseDto> feedByLikeCountPage = feedService.findFeedByLikeCountPage(pageable);
+
+        return feedByLikeCountPage;
     }
 
     // 피드 단건 조회
