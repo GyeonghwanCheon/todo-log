@@ -35,7 +35,7 @@ public class User extends BaseEntity {
 
     // 탈퇴여부
     @Setter
-    private boolean banned = false;
+    private boolean banned;
 
     // 기본 생성자
     public User(){

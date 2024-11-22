@@ -115,9 +115,12 @@ public class UserService {
     }
 
     // 유저 삭제 메서드
+    @Transactional
     public void deleteUser(Long id) {
 
         User user = findUser(id);
+
+        checkBan(user);
 
         user.setBanned(true);
     }
