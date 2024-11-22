@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
 
-    default Comment findByIdOrElseThrow(Long id){
-        return findById(id)
+    default Comment findByIdOrElseThrow(Long commentId){
+        return findById(commentId)
                 .orElseThrow(()->
                         new CustomException(ErrorCode.COMMENT_NOT_FOUND));
     }

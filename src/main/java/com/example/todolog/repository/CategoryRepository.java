@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    default Category findByIdOrElseThrow(Long id){
-        return findById(id)
+    default Category findByIdOrElseThrow(Long categoryId){
+        return findById(categoryId)
                 .orElseThrow(()->
                         new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
     }
