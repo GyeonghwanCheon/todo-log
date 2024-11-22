@@ -1,5 +1,6 @@
 package com.example.todolog.controller;
 
+import com.example.todolog.config.PasswordEncoder;
 import com.example.todolog.dto.SignupRequestDto;
 import com.example.todolog.dto.SignupResponseDto;
 import com.example.todolog.dto.UpdatePasswordRequestDto;
