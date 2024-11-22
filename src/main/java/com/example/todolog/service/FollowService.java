@@ -32,9 +32,9 @@ public class FollowService {
     public void followUser(String followerNickname, String followingNickname) {
 
         User follower = userRepository.findByNickname(followerNickname).orElseThrow(
-                () -> new IllegalArgumentException("팔로워를 찾을 수 없습니다."));
+                () -> new CustomException(ErrorCode.FOLLOWER_NOT_FOUND));
         User following = userRepository.findByNickname(followingNickname).orElseThrow(
-                () -> new IllegalArgumentException("팔로잉을 찾을 수 없습니다."));
+                () -> new CustomException(ErrorCode.FOLLOWING_NOT_FOUND));
 
         // 자기 자신을 팔로우하지 못하게 설정
         if(Objects.equals(followerNickname, followingNickname)) {
@@ -56,7 +56,7 @@ public class FollowService {
     // 사용자의 팔로잉 목록 조회
     public List<FollowDto> findFollowing(String nickname) {
         User user = userRepository.findByNickname(nickname).orElseThrow(
-                () -> new IllegalArgumentException("User not found"));
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return followRepository.findByFollower(user).stream()
                 .map(follow -> new FollowDto(
@@ -70,7 +70,7 @@ public class FollowService {
     // 사용자의 팔로잉 목록 조회
     public List<FollowDto> findFollower(String nickname) {
         User user = userRepository.findByNickname(nickname).orElseThrow(
-                () -> new IllegalArgumentException("User not found"));
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return followRepository.findByFollowing(user).stream()
                 .map(follow -> new FollowDto(
@@ -85,11 +85,11 @@ public class FollowService {
 
         // 팔로워 사용자 조회
         User follower = userRepository.findByNickname(followerNickname).orElseThrow(
-                () -> new IllegalArgumentException("팔로우를 찾을 수 없습니다."));
+                () -> new CustomException(ErrorCode.FOLLOWER_NOT_FOUND));
 
         // 팔로잉 사용자 조회
         User following = userRepository.findByNickname(followingNickname).orElseThrow(
-                () -> new IllegalArgumentException("팔로잉을 찾을 수 없습니다."));
+                () -> new CustomException(ErrorCode.FOLLOWING_NOT_FOUND));
 
         // 자기 자신 삭제시 에러 발생
         if(Objects.equals(followerNickname, followingNickname)) {
@@ -98,7 +98,7 @@ public class FollowService {
 
         // 객체 조회
         Follow follow = followRepository.findByFollowerAndFollowing(follower, following)
-                .orElseThrow(() -> new IllegalArgumentException("Follow relationship not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.DUPLICATE_RESOURCE));
 
         followRepository.delete(follow);
     }
@@ -110,7 +110,7 @@ public class FollowService {
         List<FeedResponseDto> feedResponseDtoList = new ArrayList<>();
 
         User user = userRepository.findByNickname(nickname).orElseThrow(
-                () -> new CustomException(ErrorCode.DUPLICATE_RESOURCE));
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<User> followingUsers = followRepository.findByFollower(user)
                 .stream()
