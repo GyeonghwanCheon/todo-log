@@ -7,12 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     List<Feed> findByUserInOrderByCreatedAtDesc(List<User> users);
+
+    // 특정 날짜 범위 내의 피드를 조회
+    List<Feed> findAllByUpdatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
     default Feed findByOrElseThrow(Long id) {
         return findById(id).orElseThrow(

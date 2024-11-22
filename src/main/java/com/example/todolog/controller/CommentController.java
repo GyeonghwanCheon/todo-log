@@ -47,15 +47,15 @@ public class CommentController {
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CommentResponseDto> findById(@PathVariable Long id){
-        CommentResponseDto commentResponseDto = commentService.findById(id);
+    @GetMapping("/{commentId}")
+    public ResponseEntity<CommentResponseDto> findById(@PathVariable Long commentId){
+        CommentResponseDto commentResponseDto = commentService.findById(commentId);
         return new ResponseEntity<>(commentResponseDto , HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{commentId}")
     public ResponseEntity<?> updateDetail(
-            @PathVariable Long id,
+            @PathVariable Long commentId,
             @RequestBody Map<String, String> detailMap,
             HttpServletRequest request){
 
@@ -63,16 +63,16 @@ public class CommentController {
         //login 되어있는 user data
         User loginUser = (User) session.getAttribute("sessionKey");
 
-        commentService.updateComment(id, loginUser.getId(), detailMap.get("detail"));
+        commentService.updateComment(commentId, loginUser.getId(), detailMap.get("detail"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id,HttpServletRequest request){
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> delete(@PathVariable Long commentId,HttpServletRequest request){
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
         User loginUser = (User) session.getAttribute("sessionKey");
-        commentService.delete(id,loginUser.getId());
+        commentService.delete(commentId,loginUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

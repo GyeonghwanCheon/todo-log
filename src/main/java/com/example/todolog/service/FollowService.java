@@ -9,10 +9,12 @@ import com.example.todolog.error.errorcode.ErrorCode;
 import com.example.todolog.error.exception.CustomException;
 import com.example.todolog.repository.FeedRepository;
 import com.example.todolog.repository.FollowRepository;
+import com.example.todolog.repository.LikeRepository;
 import com.example.todolog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,16 +26,17 @@ public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
     private final FeedRepository feedRepository;
+    private final LikeRepository likeRepository;
 
     // 팔로우 신청
     public void followUser(String followerNickname, String followingNickname) {
 
         User follower = userRepository.findByNickname(followerNickname).orElseThrow(
-                () -> new IllegalArgumentException("팔로워를 찾을 수 없습니다."));
+                () -> new CustomException(ErrorCode.FOLLOWER_NOT_FOUND));
         User following = userRepository.findByNickname(followingNickname).orElseThrow(
-                () -> new IllegalArgumentException("팔로잉을 찾을 수 없습니다."));
+                () -> new CustomException(ErrorCode.FOLLOWING_NOT_FOUND));
 
-        // 스스로 팔로우하지 못하게 설정
+        // 자기 자신을 팔로우하지 못하게 설정
         if(Objects.equals(followerNickname, followingNickname)) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
@@ -53,7 +56,7 @@ public class FollowService {
     // 사용자의 팔로잉 목록 조회
     public List<FollowDto> findFollowing(String nickname) {
         User user = userRepository.findByNickname(nickname).orElseThrow(
-                () -> new IllegalArgumentException("User not found"));
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return followRepository.findByFollower(user).stream()
                 .map(follow -> new FollowDto(
@@ -67,7 +70,7 @@ public class FollowService {
     // 사용자의 팔로잉 목록 조회
     public List<FollowDto> findFollower(String nickname) {
         User user = userRepository.findByNickname(nickname).orElseThrow(
-                () -> new IllegalArgumentException("User not found"));
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return followRepository.findByFollowing(user).stream()
                 .map(follow -> new FollowDto(
@@ -82,20 +85,20 @@ public class FollowService {
 
         // 팔로워 사용자 조회
         User follower = userRepository.findByNickname(followerNickname).orElseThrow(
-                () -> new IllegalArgumentException("팔로우를 찾을 수 없습니다."));
+                () -> new CustomException(ErrorCode.FOLLOWER_NOT_FOUND));
 
         // 팔로잉 사용자 조회
         User following = userRepository.findByNickname(followingNickname).orElseThrow(
-                () -> new IllegalArgumentException("팔로잉을 찾을 수 없습니다."));
+                () -> new CustomException(ErrorCode.FOLLOWING_NOT_FOUND));
 
-        // 스스로 삭제시 에러 발생
+        // 자기 자신 삭제시 에러 발생
         if(Objects.equals(followerNickname, followingNickname)) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
 
         // 객체 조회
         Follow follow = followRepository.findByFollowerAndFollowing(follower, following)
-                .orElseThrow(() -> new IllegalArgumentException("Follow relationship not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.DUPLICATE_RESOURCE));
 
         followRepository.delete(follow);
     }
@@ -103,8 +106,11 @@ public class FollowService {
 
     // 사용자 팔로워 최신 게시물 조회
     public List<FeedResponseDto> findFollowingFeeds(String nickname) {
+
+        List<FeedResponseDto> feedResponseDtoList = new ArrayList<>();
+
         User user = userRepository.findByNickname(nickname).orElseThrow(
-                () -> new CustomException(ErrorCode.DUPLICATE_RESOURCE));
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<User> followingUsers = followRepository.findByFollower(user)
                 .stream()
@@ -113,9 +119,27 @@ public class FollowService {
 
         List<Feed> feeds = feedRepository.findByUserInOrderByCreatedAtDesc(followingUsers);
 
-        return feeds.stream()
-                .map(FeedResponseDto::feedDto)
-                .collect(Collectors.toList());
+        for (Feed feed : feeds) {
+            FeedResponseDto feedResponseDto = new FeedResponseDto(
+                    feed.getId(),
+                    feed.getCategory().getName(),
+                    feed.getUser().getNickname(),
+                    feed.getTitle(),
+                    feed.getDetail(),
+                    feed.getCreatedAt(),
+                    feed.getUpdatedAt()
+            );
+
+            // 좋아요 수 조회
+            int likeCount = likeRepository.countByFeed_IdAndLikeStatus(feed.getId(), true);
+            feedResponseDto.setLikeCount(likeCount);
+
+            feedResponseDtoList.add(feedResponseDto);
+        }
+
+        return feedResponseDtoList;
+//        return feeds.stream().map(FeedResponseDto::feedDto).collect(Collectors.toList());
     }
 
 }
+
