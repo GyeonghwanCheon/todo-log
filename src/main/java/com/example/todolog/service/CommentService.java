@@ -49,10 +49,10 @@ public class CommentService {
     public void updateComment (Long commentId , Long loginUserId , String detail){
 
         Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
-        Long commentUserid = findComment.getUser().getId();
+        Long commentUserid = findComment.getUser().getUserId();
         //요청유저가 작성자인지 판별
         User findUser = userRepository.findByIdOrElseThrow(loginUserId);
-        if (!Objects.equals(commentUserid, findUser.getId())){
+        if (!Objects.equals(commentUserid, findUser.getUserId())){
             throw new CustomException(UNAUTHORIZED_USER);
         }
         findComment.updateDetail(detail);
@@ -62,10 +62,10 @@ public class CommentService {
     public void delete(Long commentId, Long loginUserId){
 
         Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
-        Long commentUserid=findComment.getUser().getId();
+        Long commentUserid=findComment.getUser().getUserId();
         User findUser = userRepository.findByIdOrElseThrow(loginUserId);
         //요청유저가 작성자인지 판별
-        if (!Objects.equals(commentUserid, findUser.getId())){
+        if (!Objects.equals(commentUserid, findUser.getUserId())){
             throw new CustomException(UNAUTHORIZED_USER);
         }
         commentRepository.delete(findComment);

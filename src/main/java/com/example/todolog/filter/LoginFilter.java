@@ -1,6 +1,8 @@
 package com.example.todolog.filter;
 
 
+import com.example.todolog.error.errorcode.ErrorCode;
+import com.example.todolog.error.exception.CustomException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,10 +42,7 @@ public class LoginFilter implements Filter {
 
             // 세션이 존재하지 않거나 sessionKey 속성이 없으면 401 코드 반환
             if(session == null || session.getAttribute("sessionKey") == null) {
-                httpResponse.sendError(401,"로그인이 필요한 작업입니다.");
-
-                // 필터 체인 중단
-                return;
+                throw new CustomException(ErrorCode.SESSION_NOT_FOUND);
             }
         }
 

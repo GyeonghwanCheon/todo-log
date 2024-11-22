@@ -2,17 +2,18 @@ package com.example.todolog.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 // 유저 데이터
 @Getter
 @Entity
-@Table(name = "user")
+@Table(name = "`user`")
 public class User extends BaseEntity {
 
     // Key 값
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     // 닉네임 (이름)
     @Column(nullable = false)
@@ -31,6 +32,10 @@ public class User extends BaseEntity {
 
     // 상태메세지
     private String statusMs;
+
+    // 탈퇴여부
+    @Setter
+    private boolean banned;
 
     // 기본 생성자
     public User(){

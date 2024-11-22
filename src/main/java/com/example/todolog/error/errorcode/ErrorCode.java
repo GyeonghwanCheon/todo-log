@@ -17,7 +17,7 @@ public enum ErrorCode {
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     UNAUTHORIZED_PASSWORD(UNAUTHORIZED, "password 가 일치하지 않습니다."),
-    UNAUTHORIZED_EMAIL(UNAUTHORIZED, "email 가 일치하지 않습니다."),
+    UNAUTHORIZED_EMAIL(UNAUTHORIZED, "해당 Email을 사용중인 사용자가 존재하지 않습니다."),
     UNAUTHORIZED_USER(UNAUTHORIZED, "권한이 없습니다. 해당유저만 가능합니다."),
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
@@ -39,6 +39,7 @@ public enum ErrorCode {
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),
+    BANED_EMAIL(CONFLICT,"이미 탈퇴한 유저입니다")
 
     ;
 

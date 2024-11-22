@@ -1,5 +1,6 @@
 package com.example.todolog.controller;
 
+import com.example.todolog.config.PasswordEncoder;
 import com.example.todolog.dto.SignupRequestDto;
 import com.example.todolog.dto.SignupResponseDto;
 import com.example.todolog.dto.UpdatePasswordRequestDto;
@@ -39,44 +40,44 @@ public class UserController {
     }
 
     // 유저 조회 메서드
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findByNickname(@PathVariable String nickname) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> findById(@PathVariable Long userId) {
 
         // 유저 조회 로직 실행
-        UserResponseDto userResponseDto = userService.findByNickname(nickname);
+        UserResponseDto userResponseDto = userService.findById(userId);
 
         // 회원가입 성공 시 객체 정보 반환 + 201 코드 반환
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
     // 유저 프로필 수정 메서드
-    @PatchMapping("/{id}/profile")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateProfileRequestDto dto){
+    @PatchMapping("/profile/{userId}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @RequestBody UpdateProfileRequestDto dto){
 
         // 새로운 mbti, 상태메세지 정보 넘기기
-        userService.updateProfile(id,dto.getNewMbti(), dto.getNewStatusMs());
+        userService.updateProfile(userId,dto.getNewMbti(), dto.getNewStatusMs());
 
         // 유저 프로필 수정 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 유저 비밀번호 수정 메서드
-    @PatchMapping("/{id}/password")
-    public ResponseEntity<UserResponseDto> updatePassword(@PathVariable Long id, @RequestBody UpdatePasswordRequestDto dto) {
+    @PatchMapping("/password/{userId}")
+    public ResponseEntity<UserResponseDto> updatePassword(@PathVariable Long userId, @RequestBody UpdatePasswordRequestDto dto) {
 
         // 이전 비밀번호, 새로운 비밀번호 정보 넘기기
-        userService.updatePassword(id,dto.getOldPassword(),dto.getNewPassword());
+        userService.updatePassword(userId,dto.getOldPassword(),dto.getNewPassword());
 
         // 유저 비밀번호 수정 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 유저 삭제 메서드
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
 
         // 유저 삭제 로직 실행
-        userService.deleteUser(id);
+        userService.deleteUser(userId);
 
         // 유저 삭제 성공시 201 코드 반환
         return new ResponseEntity<>(HttpStatus.OK);
