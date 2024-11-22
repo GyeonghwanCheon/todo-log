@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.example.todolog.error.errorcode.ErrorCode.CATEGORY_NOT_FOUND;
 import static com.example.todolog.error.errorcode.ErrorCode.CATEGORY_STEP_OVER;
 
 @Service
@@ -40,6 +41,9 @@ public class CategoryService {
 
     public CategoryResponseDto getCategoryList (Long categoryId) {
         Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        if (optionalCategory.isEmpty()){
+            throw new CustomException(CATEGORY_NOT_FOUND);
+        }
         Category category = optionalCategory.get();
 
         Deque<String> deque = getStringDeque(category);
