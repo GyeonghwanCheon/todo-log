@@ -41,17 +41,17 @@ public class UserController {
 
     // 유저 조회 메서드
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findByNickname(@PathVariable String nickname) {
+    public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
 
         // 유저 조회 로직 실행
-        UserResponseDto userResponseDto = userService.findByNickname(nickname);
+        UserResponseDto userResponseDto = userService.findById(id);
 
         // 회원가입 성공 시 객체 정보 반환 + 201 코드 반환
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
     // 유저 프로필 수정 메서드
-    @PatchMapping("/{id}/profile")
+    @PatchMapping("/profile/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateProfileRequestDto dto){
 
         // 새로운 mbti, 상태메세지 정보 넘기기
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     // 유저 비밀번호 수정 메서드
-    @PatchMapping("/{id}/password")
+    @PatchMapping("/password/{id}")
     public ResponseEntity<UserResponseDto> updatePassword(@PathVariable Long id, @RequestBody UpdatePasswordRequestDto dto) {
 
         // 이전 비밀번호, 새로운 비밀번호 정보 넘기기
