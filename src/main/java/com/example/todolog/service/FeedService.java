@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -209,6 +211,37 @@ public class FeedService {
 
         return feedResponseDtoList;
 //        return feedRepository.findAll(pageable).getContent().stream().map(FeedResponseDto::feedDto).toList();
+    }
+
+
+    // 기간별 검색 기능
+    public List<FeedResponseDto> findFeedsByDateRange(LocalDate startDate, LocalDate endDate) {
+
+        // LocalDate -> LocalDateTime 으로 변환
+        LocalDateTime startDateTime = startDate.atStartOfDay(); // 뒤 시간을 00:00:00 으로 설정
+        LocalDateTime endDateTime = endDate.atTime(23,59,59); //뒤 시간을 23:59:59 로 설정
+
+        List<Feed> feeds = feedRepository.findAllByUpdatedAtBetween(startDateTime, endDateTime);
+
+        List<FeedResponseDto> responseDtos = new ArrayList<>();
+
+        for(Feed feed : feeds) {
+            FeedResponseDto dto = new FeedResponseDto(
+                    feed.getId(),
+                    feed.getCategory().getName(),
+                    feed.getUser().getNickname(),
+                    feed.getTitle(),
+                    feed.getDetail(),
+                    feed.getCreatedAt(),
+                    feed.getUpdatedAt()
+            );
+
+            int likeCount = likeRepository.countByFeed_IdAndLikeStatus(feed.getId(), true);
+            dto.setLikeCount(likeCount);
+
+            responseDtos.add(dto);
+        }
+        return responseDtos;
     }
 
 }

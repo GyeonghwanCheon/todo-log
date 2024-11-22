@@ -1,6 +1,7 @@
 package com.example.todolog.controller;
 
 
+import com.example.todolog.dto.feeddto.DateRangeRequestDto;
 import com.example.todolog.dto.feeddto.FeedRequestDto;
 import com.example.todolog.dto.feeddto.FeedResponseDto;
 import com.example.todolog.dto.feeddto.FeedUpdateRequestDto;
@@ -117,5 +118,11 @@ public class FeedController {
         feedService.updateFeed(id, loginUser.getId() ,updateRequestDto.getTitle(), updateRequestDto.getDetail());
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 기간별 피드 검색
+    @PostMapping("/searchDate")
+    public List<FeedResponseDto> findFeedsByDateRange(@RequestBody DateRangeRequestDto requestDto) {
+        return feedService.findFeedsByDateRange(requestDto.getStartDate(), requestDto.getEndDate());
     }
 }
