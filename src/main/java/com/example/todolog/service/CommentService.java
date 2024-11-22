@@ -40,15 +40,15 @@ public class CommentService {
 
     }
 
-    public CommentResponseDto findById(Long id){
-        Comment comment = commentRepository.findByIdOrElseThrow(id);
+    public CommentResponseDto findById(Long commentId){
+        Comment comment = commentRepository.findByIdOrElseThrow(commentId);
         return new CommentResponseDto(comment.getId() , comment.getFeed().getId() ,comment.getUser().getNickname() , comment.getDetail());
     }
 
     @Transactional
-    public void updateComment (Long id , Long loginUserId , String detail){
+    public void updateComment (Long commentId , Long loginUserId , String detail){
 
-        Comment findComment = commentRepository.findByIdOrElseThrow(id);
+        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
         Long commentUserid = findComment.getUser().getId();
         //요청유저가 작성자인지 판별
         User findUser = userRepository.findByIdOrElseThrow(loginUserId);
@@ -59,9 +59,9 @@ public class CommentService {
     }
 
 
-    public void delete(Long id, Long loginUserId){
+    public void delete(Long commentId, Long loginUserId){
 
-        Comment findComment = commentRepository.findByIdOrElseThrow(id);
+        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
         Long commentUserid=findComment.getUser().getId();
         User findUser = userRepository.findByIdOrElseThrow(loginUserId);
         //요청유저가 작성자인지 판별
