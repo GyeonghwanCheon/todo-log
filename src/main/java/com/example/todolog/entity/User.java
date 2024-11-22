@@ -13,7 +13,7 @@ public class User extends BaseEntity {
     // Key 값
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     // 닉네임 (이름)
     @Column(nullable = false)

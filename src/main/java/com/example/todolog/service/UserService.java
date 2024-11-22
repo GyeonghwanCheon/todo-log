@@ -38,8 +38,8 @@ public class UserService {
     }
 
     // 유저 ID 검증 메서드
-    private User findUser(Long id) {
-        return userRepository.findById(id)
+    private User findUser(Long userId) {
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
@@ -72,9 +72,9 @@ public class UserService {
     }
 
     // 유저 조회 메서드
-    public UserResponseDto findById(Long id) {
+    public UserResponseDto findById(Long userId) {
 
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
 
         checkBan(user);
@@ -84,9 +84,9 @@ public class UserService {
 
     // 유저 프로필 수정 메서드
     @Transactional
-    public void updateProfile(Long id, String newMbti, String newStatusMs) {
+    public void updateProfile(Long userId, String newMbti, String newStatusMs) {
 
-        User user = findUser(id);
+        User user = findUser(userId);
 
         checkBan(user);
 
@@ -95,9 +95,9 @@ public class UserService {
 
     // 유저 비밀번호 수정 메서드
     @Transactional
-    public void updatePassword(Long id, String oldPassword, String newPassword) {
+    public void updatePassword(Long userId, String oldPassword, String newPassword) {
 
-        User user = findUser(id);
+        User user = findUser(userId);
 
         if(!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
@@ -116,9 +116,9 @@ public class UserService {
 
     // 유저 삭제 메서드
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(Long userId) {
 
-        User user = findUser(id);
+        User user = findUser(userId);
 
         checkBan(user);
 
