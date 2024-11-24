@@ -74,8 +74,8 @@ public class FollowService {
 
         return followRepository.findByFollowing(user).stream()
                 .map(follow -> new FollowDto(
-                        follow.getFollowing().getNickname(),
-                        follow.getFollowing().getEmail(),
+                        follow.getFollower().getNickname(),
+                        follow.getFollower().getEmail(),
                         follow.getFollower().getMbti(),
                         follow.getFollower().getStatusMs()
                 )).collect(Collectors.toList());
